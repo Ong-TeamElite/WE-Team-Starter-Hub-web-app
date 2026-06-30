@@ -748,7 +748,7 @@
             <button class="ghost-btn ghost-light" onclick="runSetupSheets()" data-i18n="setupSheets">Create Sheet Tabs</button>
           </div>
           <div style="height:18px"></div>
-          <div class="setup-code">const SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL";<br>const APP_TOKEN = "weteam2026";</div>
+          <div class="setup-code">const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzPgfQ9ZR01CgLv71r0nguQdaQvyDyWU4htWuvGWZ9C2iZKaVLy99vQSfiH5nhf6ofShQ/exec";<br>const APP_TOKEN = "weteam2026";</div>
         </div>
       </section>
     </main>
@@ -757,10 +757,16 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    const DEFAULT_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+    const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzPgfQ9ZR01CgLv71r0nguQdaQvyDyWU4htWuvGWZ9C2iZKaVLy99vQSfiH5nhf6ofShQ/exec";
+    const DEFAULT_SITE_URL = "https://ong-teamelite.github.io/WE-Team-Starter-Hub-web-app/";
     const DEFAULT_APP_TOKEN = "weteam2026";
 
-    let SCRIPT_URL = localStorage.getItem("we_script_url") || DEFAULT_SCRIPT_URL;
+    let savedScriptUrl = localStorage.getItem("we_script_url");
+    if (!savedScriptUrl || savedScriptUrl.includes("PASTE_YOUR")) {
+      savedScriptUrl = DEFAULT_SCRIPT_URL;
+      localStorage.setItem("we_script_url", DEFAULT_SCRIPT_URL);
+    }
+    let SCRIPT_URL = savedScriptUrl;
     let APP_TOKEN = localStorage.getItem("we_app_token") || DEFAULT_APP_TOKEN;
     let currentLang = localStorage.getItem("we_lang") || "en";
     let leadsCache = [];
@@ -907,7 +913,7 @@
 
     function buildPersonalLink() {
       const id = document.getElementById("personalBaId").value.trim();
-      const url = new URL(window.location.href);
+      const url = new URL(DEFAULT_SITE_URL || window.location.href);
       url.search = "";
       if (id) url.searchParams.set("ba", id);
       document.getElementById("personalLinkOutput").value = id ? url.toString() : "";
@@ -1089,7 +1095,7 @@
     }
 
     function init() {
-      document.getElementById("scriptUrlInput").value = SCRIPT_URL.includes("PASTE_YOUR") ? "" : SCRIPT_URL;
+      document.getElementById("scriptUrlInput").value = SCRIPT_URL;
       document.getElementById("appTokenInput").value = APP_TOKEN;
       setLang(currentLang);
       setDefaultDates();
